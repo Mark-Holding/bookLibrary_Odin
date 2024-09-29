@@ -14,6 +14,12 @@ function Book(title, author, pages, read){
     console.log(this.info());
 }
 
+// Toggle method on the Book prototype
+Book.prototype.toggleReadStatus = function() {
+    this.read = !this.read;
+};
+
+// display book cards
 
 function displayBook() {
     const libraryContainer = document.getElementById('library-container');
@@ -27,7 +33,8 @@ function displayBook() {
             <h3>${bookObj.title}</h3>
             <p>Author: ${bookObj.author}</p>
             <p>Pages: ${bookObj.pages}</p>
-            <p>Status ${bookObj.read ? 'Read' : 'Not Read'}</p>
+            <p>Status: ${bookObj.read ? 'Read' : 'Not Read'}</p>
+            <button class='toggle-btn' data-index='${index}'>Toggle Read Status</button>
             <button class="delete-btn" data-index="${index}">Delete</button>
         `;
 
@@ -38,13 +45,32 @@ function displayBook() {
     deleteButtons.forEach(button => {
         button.addEventListener('click', deleteBook);
     });
+
+    const toggleButtons = document.querySelectorAll('.toggle-btn');
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', toggleReadStatus)
+    });
 };
+
+// delete book from library array 
 
 function deleteBook(event) {
     const bookIndex = event.target.getAttribute('data-index');
     myLibrary.splice(bookIndex, 1);
     displayBook()
 };
+
+// toggle read status function
+
+function toggleReadStatus(event) {
+    const bookIndex = event.target.getAttribute('data-index'); //get array position
+    const book = myLibrary[bookIndex]; //find the book in the array
+    book.toggleReadStatus();
+    displayBook();
+}
+
+
+// add new book object to the library array
 
 function addBookToLibrary(book) {
     myLibrary.push(book);
@@ -58,17 +84,17 @@ const openModal = document.getElementById('openModal');
 const closeModal = document.getElementsByClassName('close')[0];
 const form = document.getElementById('bookForm');
 
-// open mdal when button is clicked
+// open modal when button is clicked
 
 openModal.onclick = function() {
     modal.style.display = 'flex';
-}
+};
 
 // close modal when 'X' is clicked
 
 closeModal.onclick = function() {
     modal.style.display = 'none';
-}
+};
 
 // Close the modal when clicking outside of the modal content
 
@@ -91,12 +117,7 @@ form.addEventListener('submit', function(event){
 
     // Create a new book object
 
-    const newBook = {
-        title: title,
-        author: author,
-        pages: pages,
-        read: read
-    };
+    const newBook = new Book(title, author, pages, read);
 
     // Add the new book to the library
 
