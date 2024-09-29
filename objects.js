@@ -47,3 +47,5 @@ function displayBook() {
         libraryContainer.appendChild(card);
     })
 };
+
+displayBook();
