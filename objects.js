@@ -1,15 +1,4 @@
-const myLibrary = [
-    {title: "Old Man", 
-        author: "CS Lewis", 
-        pages: 302, 
-        read: true
-    }, 
-    {title: "Mountain", 
-        author: "Bellamy", 
-        pages: 500, 
-        read: false
-    }
-];
+const myLibrary = [];
 
 
 function Book(title, author, pages, read){
@@ -30,7 +19,7 @@ function displayBook() {
     const libraryContainer = document.getElementById('library-container');
     libraryContainer.innerHTML = '';
 
-    myLibrary.forEach(bookObj => {
+    myLibrary.forEach((bookObj, index) => {
         const card = document.createElement('div');
         card.classList.add('card');
 
@@ -39,10 +28,22 @@ function displayBook() {
             <p>Author: ${bookObj.author}</p>
             <p>Pages: ${bookObj.pages}</p>
             <p>Status ${bookObj.read ? 'Read' : 'Not Read'}</p>
+            <button class="delete-btn" data-index="${index}">Delete</button>
         `;
 
         libraryContainer.appendChild(card);
-    })
+    });
+
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', deleteBook);
+    });
+};
+
+function deleteBook(event) {
+    const bookIndex = event.target.getAttribute('data-index');
+    myLibrary.splice(bookIndex, 1);
+    displayBook()
 };
 
 function addBookToLibrary(book) {
